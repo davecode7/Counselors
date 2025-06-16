@@ -7,6 +7,17 @@ def home():
     return '<h1>Hello Mindspace</h1>'
 
 
+
+@app.route('/me')
+def out():
+    return '<h1>Authentication</h1>'
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+
 
