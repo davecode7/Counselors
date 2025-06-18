@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request,  jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 
-
+#database structure
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mindspace.db'
 db = SQLAlchemy(app)
 
@@ -22,16 +22,48 @@ class User(db.Model):
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = register.form
+    
+    #this only accept a json not a form
+    data = request.get_json()
+    
     firstname = data.get('fname')
     lastname = data.get('lname')
     email = data.get('email')
     password = data.get('password')
 
+    #this checks if the user filled all sections and if yes the user logs in successfully
+    if (firstname and lastname and email and password):
+        return jsonify({'message': 'user registered successfully'}), 201
     
     
-    if not (firstname and lastname and email and password):
-        return jsonify({'error': 'all fields must be field'}),400
+    #checks if all fields are not field, if not throws the bellow error
+    if not any ([firstname, lastname, email, password]):
+        return jsonify({'message': 'Empty fields, fill up the fields'}), 400
+
+    
+    #stores empty fields then through an error of each
+    missing_fields = []
+
+    if not firstname:
+        missing_fields.append('firstname')
+    if not lastname:
+        missing_fields.append('lastname')
+    if not email:
+        missing_fields.append('email')
+    if not password:
+        missing_fields.append('password')
+
+    if missing_fields:
+        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+
+    
+
+    #Check if email already exists
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"error": "Email already registered"}), 409
+    
+    
     
     #hash the password, making it invisible
     hashed_password = generate_password_hash(password)
