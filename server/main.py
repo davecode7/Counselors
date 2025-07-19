@@ -1,3 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from authentication.auth import authentication
+
+
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
@@ -10,13 +17,12 @@ import os
 load_dotenv()
 
 
-from authentication.auth import authentication
 
 
 app = Flask(__name__)
 
 # JWT Secret Key
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-default-secret')
 
 #setting up MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')

@@ -1,4 +1,4 @@
-from flask import Flask, request,  jsonify, Blueprint, response
+from flask import Flask, request,  jsonify, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt_identity, get_jwt
@@ -80,21 +80,14 @@ def register():
 def login():
     
     data = request.get_json()
-    firstname = request.get_data('fname')
-    lastname = request.get_data('lname')
-    email = request.get_data('email')
-    password = request.get_data('password')
+    email = data.get('email')
+    password = data.get('password')
 
-        
+     #FIX THIS   
     Missing_fields = []
-    
-    if firstname not in db:
-            Missing_fields.append('firstname')
-    if lastname not in db:
-            Missing_fields.append('lastname')
-    if email not in db:
+    if not email:
             Missing_fields.append('email')
-    if password not in db:
+    if not password:
             Missing_fields.append('password')
 
     if Missing_fields:
@@ -121,9 +114,8 @@ def login():
     access_token = create_access_token(identity=email)
     response = jsonify({
          'msg': 'logged in successfully',
-         'access_token': access_token
-         }), 201
+         'access_token': access_token})
     set_access_cookies(response, access_token)
-    return response
+    return response, 201
 
 
