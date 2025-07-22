@@ -39,3 +39,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#server ignored client
+.evn
+venv/
+__pycache__/
+
+components.json
+eslint.config.mjs
+next.config.ts
+package.json
+package-lock.json
+postcss.config,mjs
+README.md
+tsconfig.json
+src
+public
