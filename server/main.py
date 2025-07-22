@@ -3,12 +3,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from authentication.auth import authentication
+from Admin.add import Admin
 
 
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
-from server.models import db, User
+from server.models import db, User, Add
 import pymysql
 
 pymysql.install_as_MySQLdb()
@@ -36,6 +37,7 @@ jwt = JWTManager(app)
 
 # Registering Blueprints, helps organize all related routes in the blueprint
 app.register_blueprint(authentication, url_prefix='/auth')
+app.register_blueprint(Admin, url_prefix='/Admin')
 
 # Create all tables
 with app.app_context():

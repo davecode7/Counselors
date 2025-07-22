@@ -9,3 +9,9 @@ class User(db.Model):
     email = db.Column(db.String(150), unique=True,)
     password = db.Column(db.String(300),)
 
+
+class Add(db.Model):
+    id = db.Colum(db.Integer, primary_key=True)
+    Full_Name = db.Column(db.String(50),)
+    email = db.Column(db.String(50),)
+    password = db.Column(db.String(300),)
