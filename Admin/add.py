@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint
-from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt_identity, get_jwt, verify_jwt_in_request
+from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt_identity, get_jwt, verify_jwt_in_request, jwt_required
 from server.models import db, Add
 from datetime import timezone, timedelta, datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -97,3 +97,18 @@ def log():
     })
     set_access_cookies(response, access_token)
     return response, 201
+
+
+@Admin.route('/dash', methods=['POST'])
+@jwt_required()
+def dash():
+    
+    current_email = get_jwt_identity()
+    admin = Add.query.filter_by(email=current_email).first()
+
+    if not admin:
+        return jsonify({'message': 'Access denied'}), 403
+    return jsonify(logged_in_as=current_email), 200
+
+
+
