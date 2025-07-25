@@ -88,7 +88,7 @@ def register():
 
 
 
-#logged in code
+#log in code
 @authentication.route('/login', methods=['POST'])
 def login():
     
