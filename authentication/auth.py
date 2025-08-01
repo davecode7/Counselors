@@ -180,6 +180,33 @@ def update_password():
     return jsonify({'message': 'password updated successfully'}), 201
 
 
-         
+@authentication.route('/delete', methods=['DELETE'])
+@jwt_required()
+def delete():
+     
+     current_email = get_jwt_identity()
+     delete_account = User.query.filter_by(email=current_email).first()
 
+     if not current_email:
+          return jsonify({"message": "user not found"}), 400
+     
+     data = request.get_json()
+     remove_email = data.get("remove_email")
+     remove_password = data.get("remove_password")
+
+     if not remove_email or not remove_password:
+          return jsonify({"message": "Both credentials must be provided"}), 400
+     
+     if not check_password_hash(delete_account.password, remove_password):
+          pass
+     else:
+          return jsonify({"message": "Invalid password"}), 400
+          
+     delete_account.email = remove_email
+     db.session.delete(delete_account)
+     db.session.commit()
+     return jsonify({"message": "Account deleted"}), 201
+
+         
+#TEST THIS ROUTE ABD ADD THE RBAC TO THE ADMIN AND GO BACK TO SOKOCONNECT TO FIX THE DB CONNECTION CAUSING THE USER NOT FOUND
 
