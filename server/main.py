@@ -33,6 +33,7 @@ db.init_app(app)
 from authentication.auth import authentication
 from Admin.add import Admin
 from logout.log import logout
+from therapist.count import therapist
 
 # Enable JWT authentication for this app
 jwt = JWTManager(app)  
@@ -41,6 +42,7 @@ jwt = JWTManager(app)
 app.register_blueprint(authentication, url_prefix='/auth')
 app.register_blueprint(Admin, url_prefix='/Admin')
 app.register_blueprint(logout, url_prefix='/logout')
+app.register_blueprint(therapist, url_prefix='/therapist')
 
 # Create all tables
 with app.app_context():
