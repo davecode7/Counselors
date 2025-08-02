@@ -198,15 +198,15 @@ def delete():
           return jsonify({"message": "Both credentials must be provided"}), 400
      
      if not check_password_hash(delete_account.password, remove_password):
-          pass
-     else:
           return jsonify({"message": "Invalid password"}), 400
           
      delete_account.email = remove_email
      db.session.delete(delete_account)
      db.session.commit()
-     return jsonify({"message": "Account deleted"}), 201
+     return jsonify({"message": f"user {delete_account} has been deleted"}), 201
 
          
-#TEST THIS ROUTE ABD ADD THE RBAC TO THE ADMIN AND GO BACK TO SOKOCONNECT TO FIX THE DB CONNECTION CAUSING THE USER NOT FOUND
+#TEST THIS ROUTE AND ADD THE RBAC TO THE ADMIN AND
+#  GO BACK TO SOKOCONNECT TO FIX
+#  THE DB CONNECTION CAUSING THE USER NOT FOUND
 
