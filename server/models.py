@@ -13,3 +13,12 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Therapy(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    Full_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True,  nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    my_id = db.Column(db.String(100), unique=True, nullable=False)
+    role = db.Column(db.String(20), default="counselor", nullable=False)
+    Create_at = db.Column(db.DateTime, default=datetime.utcnow)
+
