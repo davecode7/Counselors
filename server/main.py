@@ -7,8 +7,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
-from server.models import db, User, Add
+from server.models import db, User
 import pymysql
+
 
 pymysql.install_as_MySQLdb()
 from dotenv import load_dotenv
