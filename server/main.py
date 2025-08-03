@@ -39,7 +39,7 @@ from therapist.count import therapist
 jwt = JWTManager(app)  
 
 # Registering Blueprints, helps organize all related routes in the blueprint
-app.register_blueprint(authentication, url_prefix='/auth')
+app.register_blueprint(authentication, url_prefix='/authentication')
 app.register_blueprint(Admin, url_prefix='/Admin')
 app.register_blueprint(logout, url_prefix='/logout')
 app.register_blueprint(therapist, url_prefix='/therapist')
@@ -47,6 +47,7 @@ app.register_blueprint(therapist, url_prefix='/therapist')
 # Create all tables
 with app.app_context():
     db.create_all()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

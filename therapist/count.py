@@ -1,5 +1,6 @@
 from flask import request, Blueprint, jsonify
 from flask_jwt_extended import verify_jwt_in_request, get_jwt, get_jwt_identity, create_access_token, set_access_cookies
+from flask_jwt_extended import jwt_required
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import check_password_hash, generate_password_hash
 from server.models import db, Therapy
@@ -99,8 +100,78 @@ def get_in():
         "access_token": access_token})
     set_access_cookies(response, access_token)
     return response, 201
+
+
+@therapist.route('/delete_count', methods=['DELETE'])
+@jwt_required()
+def delete_count():
+
+    current_email = get_jwt_identity()
+    delete_counselor = Therapy.query.filter_by(email=current_email).first()
+
+    if not delete_counselor:
+        return jsonify({"message": "user not found"}), 400
     
+    data = request.get_json()
+    remove_email = data.get("remove_email")
+    remove_password = data.get("remove_password")
+
+    if not remove_email or not remove_password:
+        return jsonify({"message": "Both email and password are required"}), 400
+    
+    if not check_password_hash(delete_counselor.password, remove_password):
+        return jsonify({"message": "Invalid password"}), 400
+    
+    delete_counselor.email = remove_email
+    db.session.delete(delete_counselor)
+    db.session.commit()
+    return jsonify({"message": "Account deleted successfully"}), 201
 
 
+@therapist.route('/update_the_pass', methods=['PUT'])
+@jwt_required()
+def update_the_password():
+
+    current_email = get_jwt_identity()
+    up_date = Therapy.query.filter_by(email=current_email).first()
+
+    if not up_date:
+        return jsonify({"message": "user not found"}), 400
+    
+    data = request.get_json()
+    update_password = data.get("update_password")
+
+    if not update_password:
+        return jsonify({"message": "password required"}), 400
+    
+    if not check_password_hash(up_date.password, update_password):
+        return jsonify({"message": "Invalid password"}), 400
+    
+    up_date.password = update_password
+    db.session.commit()
+    return jsonify({"message": "password updated successfully"}), 201
+
+@therapist.route('/update_the_email', methods=['PUT'])
+@jwt_required()
+def update_the_email():
+
+    current_email = get_jwt_identity()
+    up_email = Therapy.query.filter_by(email=current_email).first()
+
+    if not up_email:
+        return jsonify({"message": "user not found"}), 400
+    
+    data = request.get_json()
+    new_email = data.get("new_email")
+
+    if not new_email:
+        return jsonify({"new email required"}), 400
+    
+    up_email.email = new_email
+    db.session.commit()
+    return jsonify({"message": "email updated successfully"}), 201
+
+
+#TEST THIS UPDATE AND DELETE ROUTE 
     
 
