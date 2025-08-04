@@ -62,6 +62,9 @@ def set_account():
     if existing_counselor:
         return jsonify({"message": "email already exist"}), 400
     
+    if Therapy.query.filter_by(my_id=my_id).first():
+        return jsonify({"message": "id already taken"}), 400
+    
     hashed_password = generate_password_hash(password)
     
     new_counselor = Therapy(Full_name=Full_name, email=email, password=hashed_password, my_id=my_id)
@@ -139,17 +142,20 @@ def update_the_password():
         return jsonify({"message": "user not found"}), 400
     
     data = request.get_json()
-    update_password = data.get("update_password")
+    old_password = data.get("old_password")
+    new_password = data.get("new_password")
 
-    if not update_password:
-        return jsonify({"message": "password required"}), 400
+    if not old_password or not new_password:
+        return jsonify({"message": "Both passwords are required"}), 400
     
-    if not check_password_hash(up_date.password, update_password):
-        return jsonify({"message": "Invalid password"}), 400
+    if not check_password_hash(up_date.password, old_password):
+        return jsonify({"message": "Invalid old password"}), 400
     
-    up_date.password = update_password
+    up_date.password = generate_password_hash(new_password)
     db.session.commit()
     return jsonify({"message": "password updated successfully"}), 201
+
+
 
 @therapist.route('/update_the_email', methods=['PUT'])
 @jwt_required()
@@ -171,7 +177,5 @@ def update_the_email():
     db.session.commit()
     return jsonify({"message": "email updated successfully"}), 201
 
-
-#TEST THIS UPDATE AND DELETE ROUTE 
     
 

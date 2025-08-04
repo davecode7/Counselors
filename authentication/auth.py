@@ -200,7 +200,7 @@ def delete():
      if not check_password_hash(delete_account.password, remove_password):
           return jsonify({"message": "Invalid password"}), 400
           
-     delete_account.email = remove_email
+     delete_account.email = generate_password_hash(remove_email)
      db.session.delete(delete_account)
      db.session.commit()
      return jsonify({"message": f"user {delete_account} has been deleted"}), 201
