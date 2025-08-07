@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import check_password_hash, generate_password_hash
 from server.models import db, Therapy
+from authentication.decoration import role_required
 
 therapist = Blueprint('therapist', '__name__')
 
@@ -107,6 +108,7 @@ def get_in():
 
 @therapist.route('/delete_count', methods=['DELETE'])
 @jwt_required()
+@role_required("counselor")
 def delete_count():
 
     current_email = get_jwt_identity()
@@ -133,6 +135,7 @@ def delete_count():
 
 @therapist.route('/update_the_pass', methods=['PUT'])
 @jwt_required()
+@role_required("counselor")
 def update_the_password():
 
     current_email = get_jwt_identity()
@@ -159,6 +162,7 @@ def update_the_password():
 
 @therapist.route('/update_the_email', methods=['PUT'])
 @jwt_required()
+@role_required("counselor")
 def update_the_email():
 
     current_email = get_jwt_identity()

@@ -6,6 +6,7 @@ import os
 from server.models import db, User
 from datetime import datetime, timezone, timedelta
 from flask_jwt_extended import jwt_required
+from authentication.decoration import role_required
 
 #traces an error if any error occur
 #import pdb; pdb.set_trace()
@@ -137,6 +138,7 @@ def login():
 
 @authentication.route('/email_update', methods=['PUT'])
 @jwt_required()
+@role_required("user")
 def email_update():
      
     current_email = get_jwt_identity()
@@ -158,6 +160,7 @@ def email_update():
 
 @authentication.route('/update_password', methods=['PUT'])
 @jwt_required()
+@role_required("user")
 def update_password():
     current_email = get_jwt_identity()
     password_info = User.query.filter_by(email=current_email).first()
@@ -182,6 +185,7 @@ def update_password():
 
 @authentication.route('/delete', methods=['DELETE'])
 @jwt_required()
+@role_required("user")
 def delete():
      
      current_email = get_jwt_identity()
