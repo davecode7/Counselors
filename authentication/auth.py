@@ -7,6 +7,8 @@ from server.models import db, User
 from datetime import datetime, timezone, timedelta
 from flask_jwt_extended import jwt_required
 from authentication.decoration import role_required
+import random
+import string
 
 #traces an error if any error occur
 #import pdb; pdb.set_trace()
@@ -82,9 +84,23 @@ def register():
     hashed_password = generate_password_hash(password)
 
 
+    def generate_anonymous_username():
+        while True:
+            random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
+            username = f"user_{random_part}"
+            # Ensure it's unique
+            existing_user = User.query.filter_by(username=username).first()
+            if not existing_user:
+                return username
+            
+            #break
+
+        
+
 
    #saves user info in the database
-    new_user = User(firstname=firstname, lastname=lastname, email=email, password=hashed_password)
+    new_user = User(firstname=firstname, lastname=lastname, email=email,
+                     password=hashed_password, username=generate_anonymous_username())
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'Account created successfully'}), 201

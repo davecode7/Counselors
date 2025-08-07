@@ -9,6 +9,7 @@ class User(db.Model):
     lastname = db.Column(db.String(50),)
     email = db.Column(db.String(150), unique=True,)
     password = db.Column(db.String(300),)
+    username = db.Column(db.String(50), unique=True)
     role = db.Column(db.String(20), default="user", nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
